@@ -60,7 +60,7 @@ class ResourceHub {
 
         if ( is_callable(array($resource, 'put')) ) {
             $app
-                ->put($base.'/{id}', 'controller.resourcehub:put')
+                ->put($base, 'controller.resourcehub:put')
                 ->bind($uri . ':put');
         }
 

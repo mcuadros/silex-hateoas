@@ -40,7 +40,6 @@ class ResourceHub {
         return ResourceResponse::create($value, $status);
     }
 
-
     public function put(Request $request)
     {
         $resource = $this->getResource($request);
@@ -53,10 +52,10 @@ class ResourceHub {
         return ResourceResponse::create($value, $status);
     }
 
-    public function delete(Request $request)
+    public function delete(Request $request, $id)
     {
         $resource = $this->getResource($request);
-        $result = $resource->put($request->request->all());
+        $result = $resource->delete($id);
 
         if ( $result === false ) $status = StatusCode::NOT_FOUND;
         else if ( $result === null ) $status = StatusCode::NO_CONTENT;

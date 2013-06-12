@@ -1,6 +1,6 @@
 {
-    "name": "mcuadros/silex-hal",
-    "homepage": "http://github.com/mcuadros/silex-hal",
+    "name": "mcuadros/silex-hateoas",
+    "homepage": "http://github.com/mcuadros/silex-hateoas",
     "type": "library",
     "minimum-stability": "dev",
     "require": {
