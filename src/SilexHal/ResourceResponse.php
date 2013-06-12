@@ -30,7 +30,7 @@ class ResourceResponse extends Response
     }
 
 
-    public function setData(Hal $data = null)
+    public function setData($data = null)
     {
         $this->data = $data;
         return $this->update();

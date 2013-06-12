@@ -42,25 +42,31 @@ class ResourceHub {
 
         if ( is_callable(array($resource, 'get')) ) {
             $app
-                ->get($base, 'SilexHal\Controllers\ResourceHub::resource')
+                ->get($base, 'controller.resourcehub:get')
+                ->bind($uri . ':list');
+        }
+
+        if ( is_callable(array($resource, 'getOne')) ) {
+            $app
+                ->get($base . '/{id}', 'controller.resourcehub:get')
                 ->bind($uri . ':get');
         }
 
         if ( is_callable(array($resource, 'post')) ) {
             $app
-                ->post($base . '/{id}', 'SilexHal\Controllers\ResourceHub::resource')
+                ->post($base . '/{id}', 'controller.resourcehub:post')
                 ->bind($uri . ':post');
         }
 
         if ( is_callable(array($resource, 'put')) ) {
             $app
-                ->put($base.'/{id}', 'SilexHal\Controllers\ResourceHub::resource')
+                ->put($base.'/{id}', 'controller.resourcehub:put')
                 ->bind($uri . ':put');
         }
 
         if ( is_callable(array($resource, 'delete')) ) {
             $app
-                ->delete($base.'/{id}', 'SilexHal\Controllers\ResourceHub::resource')
+                ->delete($base.'/{id}', 'controller.resourcehub:delete')
                 ->bind($uri . ':delete');
         }
     }

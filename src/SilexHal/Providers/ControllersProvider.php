@@ -8,8 +8,11 @@ use SilexHal\Controllers\ResourceHub;
 
 class ControllersProvider implements ServiceProviderInterface {
 
-    public function register(Application $app) {
-        $app->match('/', 'SilexHal\Controllers\ResourceHub::index')->bind('index');
+    public function register(Application $app)
+    {
+        $app['controller.resourcehub'] = $app->share(function() use ($app) {
+            return new ResourceHub($app);
+        });
     }
 
     public function boot(Application $app) {

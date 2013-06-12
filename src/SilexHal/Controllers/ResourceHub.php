@@ -4,51 +4,72 @@ use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
 use SilexHal\ResourceResponse;
+use Teapot\StatusCode;
 
 class ResourceHub {
+    private $app;
 
-    public function index(Application $app) {
-        $root = $app['hal']('/');
-        foreach($app['resourcehub']->getAll() as $resource) {
-            $metadata = $resource->getMetadata();
-            $hal = $app['hal'](
-                '/' . $metadata['name'],
-                $metadata
-            );
-
-            $root->addResource('resource', $hal);
-        }
-
-        return ResourceResponse::create($root);
-
-     
-        exit();
-
-
-        
-        $hal->addLink('next', '/orders?page=2');
-        $hal->addLink('search', '/orders?id={order_id}');
-
-        $resource = $app['hal'](
-            '/orders/123',
-            array(
-                'total' => 30.00,
-                'currency' => 'USD',
-            )
-        );
-
-        $resource->addLink('customer', '/customer/bob', array('title' => 'Bob Jones <bob@jones.com>'));
-        $hal->addResource('order', $resource);
-
-        return ResourceResponse::create($hal);
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
     }
 
-    public function resource(Application $app, Request $request)
+    public function get(Request $request, $id = null)
+    {
+        $resource = $this->getResource($request);
+        if ( $id ) $result = $resource->getOne($id);
+        else $result = $resource->get();
+
+        if ( $result === false ) $status = StatusCode::NOT_FOUND;
+        else if ( $result === null ) $status = StatusCode::NO_CONTENT;
+        else $status = StatusCode::OK;
+
+        return ResourceResponse::create($result, $status);
+    }
+
+    public function post(Request $request, $id)
+    {
+        $resource = $this->getResource($request);
+        $result = $resource->post($id, $request->request->all());
+
+        if ( $result === false ) $status = StatusCode::CONFLICT;
+        else if ( $result === null ) $status = StatusCode::NOT_FOUND;
+        else $status = StatusCode::OK;
+
+        $value = $resource->getOne($id);
+        return ResourceResponse::create($value, $status);
+    }
+
+
+    public function put(Request $request)
+    {
+        $resource = $this->getResource($request);
+        $result = $resource->put($request->request->all());
+
+        if ( !$result ) $status = StatusCode::BAD_REQUEST;
+        else $status = StatusCode::CREATED;
+
+        $value = $resource->getOne($result);
+        return ResourceResponse::create($value, $status);
+    }
+
+    public function delete(Request $request)
+    {
+        $resource = $this->getResource($request);
+        $result = $resource->put($request->request->all());
+
+        if ( $result === false ) $status = StatusCode::NOT_FOUND;
+        else if ( $result === null ) $status = StatusCode::NO_CONTENT;
+        else $status = StatusCode::OK;
+
+        return ResourceResponse::create(false, $status);
+    }
+
+    private function getResource(Request $request)
     {
         $params = $request->attributes->all();
 
         $route = explode(':', $params['_route']);
-        $hal = $app['resourcehub']->get($route[0])->{$route[1]}();
-        return ResourceResponse::create($hal);
+        return $this->app['resourcehub']->get($route[0]);
     }
 }
