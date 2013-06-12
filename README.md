@@ -105,6 +105,14 @@ curl http://localhost:8080/articles/1 -X GET -i
 ```
 
 ```js
+HTTP/1.1 200 OK
+Host: localhost:8080
+Connection: close
+X-Powered-By: PHP/5.4.12
+Cache-Control: no-cache
+Date: Wed, 12 Jun 2013 14:14:05 GMT
+Content-Type: application/hal+json
+
 {
   "id": 1,
   "title": "foo",
