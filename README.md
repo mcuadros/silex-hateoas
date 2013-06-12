@@ -23,6 +23,7 @@ You can see [package information on Packagist.](https://packagist.org/packages/m
 ```sh
 git clone https://github.com/mcuadros/silex-hateoas silex-hateoas
 cd silex-hateoas
+git checkout basic
 composer install
 ```
 
