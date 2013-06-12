@@ -198,16 +198,6 @@ Content-Type: application/hal+json
 ```
 
 
-Tests
------
-
-Tests are in the `tests` folder.
-To run them, you need PHPUnit.
-Example:
-
-    $ phpunit --configuration phpunit.xml.dist
-
-
 License
 -------
 
